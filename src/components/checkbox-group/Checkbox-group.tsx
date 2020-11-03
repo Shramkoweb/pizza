@@ -27,12 +27,14 @@ const CheckboxGroup: FC<CheckboxGroupProps> = (props) => {
 
               // TODO remove after add CSS
               return (
-                <li style={{
-                  width: 150,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}>
+                <li
+                  key={name}
+                  style={{
+                    width: 150,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}>
                   <img src={image} alt={image}/>
 
                   <label htmlFor={name}>{name}</label>

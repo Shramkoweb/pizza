@@ -10,7 +10,6 @@ function App() {
 
     // console.log(Object.entries(order));
 
-    console.log(size);
     console.log(order);
   };
 
