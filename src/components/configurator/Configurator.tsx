@@ -1,180 +1,286 @@
-import React, {
-  ChangeEvent,
-  FC,
-} from "react";
-
-import RadioGroup from "../radio-group/RadioGroup";
+import React, { FC } from "react";
+import "./index.css";
 
 type ConfiguratorProps = any;
 
-// Подумать над именем
-enum PizzaSetting {
-  Size = "Size",
-  Dough = "Dough",
-  Souse = "Souse",
-  Cheese = "Cheese",
-  Vegetable = "Vegetable",
-  Meet = "Meet",
+type PizzaConstructor = {
+  size: string,
+  dough: string,
+  souse: string,
+  fillings: string[],
 }
 
-const Configurator: FC<ConfiguratorProps> = (props) => {
-  const { setOrder } = props;
-  // TODO add legend & fieldsets
-  // fieldset is RadioGroup
-  // legend is RadioGroup.props.title
-  const handleFormChange = (evt: ChangeEvent<HTMLFormElement>) => {
-    if (evt.target["type"] === "radio") {
-      setOrder((prevState: any) => {
+const namingsByInputValues: { [index: string]: string } = {
+  thin: "Тонком",
+  lush: "Толстом",
+  ketchup: "Томатный",
+  white: "Белый",
+  acute: "Острый",
+  mozzarella: "Моцарелла",
+  cheddar: "Чеддер",
+  blue: "Дор Блю",
+  tomato: "Помидор",
+  mushrooms: "Грибы",
+  paper: "Перец",
+  bacon: "Бекон",
+  pepperoni: "Пепперони",
+  ham: "Ветчина",
+};
+
+const Configurator: FC<ConfiguratorProps> = () => {
+  const [price, setPrice] = React.useState(200);
+  const [pizza, setPizza] = React.useState<PizzaConstructor>({
+    size: "30",
+    dough: "thin",
+    souse: "ketchup",
+    fillings: [],
+  });
+  const [isModalVisible, setModalVisible] = React.useState(false);
+
+  const handleSizeInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setPizza(prevState => {
+      return {
+        ...prevState,
+        size: evt.target.value,
+      };
+    });
+  };
+
+  const handleDoughInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setPizza(prevState => {
+      return {
+        ...prevState,
+        dough: evt.target.value,
+      };
+    });
+  };
+
+  const handleSouseInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setPizza(prevState => {
+      return {
+        ...prevState,
+        souse: evt.target.value,
+      };
+    });
+  };
+
+  const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = evt.target;
+    const isFillingExist = pizza.fillings.find((filling) => value === filling);
+
+    if (!isFillingExist) {
+      setPizza(prevState => {
         return {
           ...prevState,
-          [evt.target.name]: {
-            [evt.target.value]: evt.target.checked,
-          },
+          fillings: [...prevState.fillings, value],
         };
       });
     } else {
-      setOrder((prevState: any) => {
+      setPizza(prevState => {
+        const filteredArray = prevState.fillings.filter((item) => item !== value);
+
         return {
           ...prevState,
-          [evt.target.name]: {
-            ...prevState[evt.target.name],
-            [evt.target.value]: evt.target.checked,
-          },
+          fillings: filteredArray,
         };
       });
     }
   };
 
-  const [configuratorState, setConfiguratorState] = React.useState({
-    [PizzaSetting.Size]: {
-      "30cm": true,
-      "35cm": false,
-    },
-    [PizzaSetting.Dough]: {
-      "Тонкое": true,
-      "Пышное": false,
-    },
-    [PizzaSetting.Souse]: {
-      "Томатный": true,
-      "Белый": false,
-      "Острый": false,
-    },
-    [PizzaSetting.Cheese]: {
-      "Моцарелла": false,
-      "Чеддер": false,
-      "Дор Блю": false,
-    },
-    [PizzaSetting.Vegetable]: {
-      "Помидор": false,
-      "Грибы": false,
-      "Перец": false,
-    },
-    [PizzaSetting.Meet]: {
-      "Бекон": false,
-      "Пепперони": false,
-      "Ветчина": false,
-    },
-  });
+  const handleFormSubmit = (evt: any) => {
+    evt.preventDefault();
+
+    setModalVisible(true);
+  };
+
+  React.useEffect(() => {
+    const fillingsAmount = pizza.fillings.length;
+    const isBigPizza = pizza.size === "35";
+
+    if (isBigPizza) {
+      setPrice(() => {
+        return 250 + fillingsAmount * 29;
+      });
+    } else {
+      setPrice(() => {
+        return 200 + fillingsAmount * 29;
+      });
+    }
+  }, [pizza]);
 
   return (
     <div>
       <form
-        onChange={handleFormChange}
+        onSubmit={handleFormSubmit}
         action="https://echo.htmlacademy.ru"
         method="POST"
       >
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <RadioGroup
-            title={"Размер"}
-            groupName={PizzaSetting.Size}
-            values={configuratorState[PizzaSetting.Size]}
-          />
+        <div>
+          <fieldset>
+            <legend>Размер</legend>
 
-          <RadioGroup
-            title={"Тесто"}
-            groupName={PizzaSetting.Dough}
-            values={configuratorState[PizzaSetting.Dough]}
-          />
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="30">30 см</label>
 
-          <RadioGroup
-            title={"Выберите соус"}
-            groupName={PizzaSetting.Souse}
-            values={configuratorState[PizzaSetting.Souse]}
-          />
+                <input onChange={handleSizeInputChange} type="radio" id="30" name='size' value='30' defaultChecked/>
+              </li>
 
-          {/*<CheckboxGroup*/}
-          {/*  title='Добавьте сыр'*/}
-          {/*  groupName='cheese'*/}
-          {/*  values={[*/}
-          {/*    {*/}
-          {/*      name: "Моцарелла",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 11,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Чеддер",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 23,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Дор Блю",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 14,*/}
-          {/*    },*/}
-          {/*  ]}*/}
-          {/*/>*/}
+              <li>
+                <label htmlFor="35">35 см</label>
 
-          {/*<CheckboxGroup*/}
-          {/*  title='Добавьте овощи'*/}
-          {/*  groupName='vegetable'*/}
-          {/*  values={[*/}
-          {/*    {*/}
-          {/*      name: "Помидор",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 41,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Грибы",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 16,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Перец",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 33,*/}
-          {/*    },*/}
-          {/*  ]}*/}
-          {/*/>*/}
+                <input onChange={handleSizeInputChange} type="radio" id="35" name='size' value='35'/>
+              </li>
+            </ul>
+          </fieldset>
 
-          {/*<CheckboxGroup*/}
-          {/*  title='Добавьте мясо'*/}
-          {/*  groupName='meat'*/}
-          {/*  values={[*/}
-          {/*    {*/}
-          {/*      name: "Бекон",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 64,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Пепперони",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 15,*/}
-          {/*    },*/}
-          {/*    {*/}
-          {/*      name: "Ветчина",*/}
-          {/*      image: "https://via.placeholder.com/30",*/}
-          {/*      price: 26,*/}
-          {/*    },*/}
-          {/*  ]}*/}
-          {/*/>*/}
+          <fieldset>
+            <legend>Тесто</legend>
+
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="thin">Тонкое</label>
+
+                <input
+                  onChange={handleDoughInputChange}
+                  type="radio"
+                  id="thin"
+
+                  name='dough'
+                  value='thin'
+                  defaultChecked
+                />
+              </li>
+
+              <li>
+                <label htmlFor="lush">Пышное</label>
+
+                <input onChange={handleDoughInputChange} type="radio" id="lush" name='dough' value='lush'/>
+              </li>
+            </ul>
+          </fieldset>
+
+          <fieldset>
+            <legend>Выберите соус</legend>
+
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="ketchup">Томатный</label>
+
+                <input onChange={handleSouseInputChange} type="radio" id="ketchup" name='souse' value='ketchup'
+                       defaultChecked/>
+              </li>
+
+              <li>
+                <label htmlFor="white">Белый</label>
+
+                <input onChange={handleSouseInputChange} type="radio" id="white" name='souse' value='white'/>
+              </li>
+
+              <li>
+                <label htmlFor="acute">Острый</label>
+
+                <input onChange={handleSouseInputChange} type="radio" id="acute" name='souse' value='acute'/>
+              </li>
+            </ul>
+          </fieldset>
+
+          <fieldset>
+            <legend>Добавьте сыр</legend>
+
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="mozzarella">Моцарелла</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="mozzarella" name='cheese'
+                       value='mozzarella'/>
+              </li>
+
+              <li>
+                <label htmlFor="cheddar">Чеддер</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="cheddar" name='cheese' value='cheddar'/>
+              </li>
+
+              <li>
+                <label htmlFor="blue">Дор Блю</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="blue" name='cheese' value='blue'/>
+              </li>
+            </ul>
+          </fieldset>
+
+          <fieldset>
+            <legend>Добавьте овощи</legend>
+
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="tomato">Помидор</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="tomato" name='vegetable' value='tomato'/>
+              </li>
+
+              <li>
+                <label htmlFor="mushrooms">Грибы</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="mushrooms" name='vegetable'
+                       value='mushrooms'/>
+              </li>
+
+              <li>
+                <label htmlFor="paper">Перец</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="paper" name='vegetable' value='paper'/>
+              </li>
+            </ul>
+          </fieldset>
+
+          <fieldset>
+            <legend>Добавьте мясо</legend>
+
+            <ul style={{ listStyle: "none" }}>
+              <li>
+                <label htmlFor="bacon">Бекон</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="bacon" name='meat' value='bacon'/>
+              </li>
+
+              <li>
+                <label htmlFor="pepperoni">Пепперони</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="pepperoni" name='meat' value='pepperoni'/>
+              </li>
+
+              <li>
+                <label htmlFor="ham">Ветчина</label>
+
+                <input onChange={handleCheckboxChange} type="checkbox" id="ham" name='meat' value='ham'/>
+              </li>
+            </ul>
+          </fieldset>
+
+          <button type="submit">Заказать за {price} руб</button>
         </div>
-
-        <button type="submit">123123</button>
       </form>
+
+
+      {
+        isModalVisible && (
+          <div className='modal'>
+            <h2>Маргарита</h2>
+            <p>{pizza.size} см на {namingsByInputValues[pizza.dough]} тесте</p>
+
+            <p>
+              {namingsByInputValues[pizza.souse]} соус -
+              {
+                pizza.fillings.map(filling => {
+                  return namingsByInputValues[filling];
+                }).join(", ")
+              }
+            </p>
+          </div>
+        )
+      }
     </div>
   );
 };
