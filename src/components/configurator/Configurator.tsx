@@ -40,29 +40,11 @@ const Configurator: FC = () => {
   });
   const [isModalVisible, setModalVisible] = React.useState(false);
 
-  const handleSizeInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRadioInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setConstructor(prevState => {
       return {
         ...prevState,
-        size: evt.target.value,
-      };
-    });
-  };
-
-  const handleDoughInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setConstructor(prevState => {
-      return {
-        ...prevState,
-        dough: evt.target.value,
-      };
-    });
-  };
-
-  const handleSouseInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setConstructor(prevState => {
-      return {
-        ...prevState,
-        souse: evt.target.value,
+        [evt.target.name]: evt.target.value,
       };
     });
   };
@@ -128,7 +110,7 @@ const Configurator: FC = () => {
                 <label htmlFor="30">30 см</label>
 
                 <input
-                  onChange={handleSizeInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="30"
                   name='size'
@@ -141,7 +123,7 @@ const Configurator: FC = () => {
                 <label htmlFor="35">35 см</label>
 
                 <input
-                  onChange={handleSizeInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="35"
                   name='size'
@@ -159,7 +141,7 @@ const Configurator: FC = () => {
                 <label htmlFor="thin">Тонкое</label>
 
                 <input
-                  onChange={handleDoughInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="thin"
                   name='dough'
@@ -172,7 +154,7 @@ const Configurator: FC = () => {
                 <label htmlFor="lush">Пышное</label>
 
                 <input
-                  onChange={handleDoughInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="lush"
                   name='dough'
@@ -190,7 +172,7 @@ const Configurator: FC = () => {
                 <label htmlFor="ketchup">Томатный</label>
 
                 <input
-                  onChange={handleSouseInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="ketchup"
                   name='souse'
@@ -203,7 +185,7 @@ const Configurator: FC = () => {
                 <label htmlFor="white">Белый</label>
 
                 <input
-                  onChange={handleSouseInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="white"
                   name='souse'
@@ -215,7 +197,7 @@ const Configurator: FC = () => {
                 <label htmlFor="acute">Острый</label>
 
                 <input
-                  onChange={handleSouseInputChange}
+                  onChange={handleRadioInputChange}
                   type="radio"
                   id="acute"
                   name='souse'
