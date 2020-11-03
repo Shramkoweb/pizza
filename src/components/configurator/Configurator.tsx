@@ -1,15 +1,50 @@
-import React from "react";
+import React, {
+  ChangeEvent,
+  FC,
+} from "react";
 
 import RadioGroup from "../radio-group/RadioGroup";
 import CheckboxGroup from "../checkbox-group/Checkbox-group";
 
-const Configurator = () => {
+type ConfiguratorProps = any;
+
+const Configurator: FC<ConfiguratorProps> = (props) => {
+  const { setOrder } = props;
   // TODO add legend & fieldsets
   // fieldset is RadioGroup
   // legend is RadioGroup.props.title
+  const handleFormChange = (evt: ChangeEvent<HTMLFormElement>) => {
+    if (evt.target["type"] === "checkbox") {
+      setOrder((prevState: any) => {
+        return {
+          ...prevState,
+          [evt.target.name]: {
+            ...prevState[evt.target.name],
+            [evt.target.value]: evt.target.checked,
+          },
+        };
+      });
+    } else {
+      setOrder((prevState: any) => {
+        return {
+          ...prevState,
+          [evt.target.name]: evt.target.value,
+        };
+      });
+    }
+  };
+
+  const [configuratorState, setConfiguratorState] = React.useState({
+    size: '30cm',
+    dough: "Тонкое",
+    souse: 'Томатный',
+  });
+
+
   return (
     <div>
       <form
+        onChange={handleFormChange}
         action="https://echo.htmlacademy.ru"
         method="POST"
       >
