@@ -1,6 +1,6 @@
 # Pizza (Work in progress)
 
-Pizza is a react app for buy pizza.
+"Pizza" is a react app for buying pizza.
 Mobile first design.
 
 ## Installation
