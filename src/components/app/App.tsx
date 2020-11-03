@@ -1,4 +1,5 @@
 import React from "react";
+
 import Configurator from "../configurator/Configurator";
 
 function App() {

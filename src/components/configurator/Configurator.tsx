@@ -1,7 +1,10 @@
 import React, { FC } from "react";
+
 import "./index.css";
 
-type ConfiguratorProps = any;
+const DEFAULT_PIZZA_PRICE: number = 200;
+const BIG_PIZZA_PRICE: number = 250;
+const FILLING_PRICE: number = 29;
 
 type PizzaConstructor = {
   size: string,
@@ -27,9 +30,9 @@ const namingsByInputValues: { [index: string]: string } = {
   ham: "Ветчина",
 };
 
-const Configurator: FC<ConfiguratorProps> = () => {
-  const [price, setPrice] = React.useState(200);
-  const [pizza, setPizza] = React.useState<PizzaConstructor>({
+const Configurator: FC = () => {
+  const [price, setPrice] = React.useState(DEFAULT_PIZZA_PRICE);
+  const [constructor, setConstructor] = React.useState<PizzaConstructor>({
     size: "30",
     dough: "thin",
     souse: "ketchup",
@@ -38,7 +41,7 @@ const Configurator: FC<ConfiguratorProps> = () => {
   const [isModalVisible, setModalVisible] = React.useState(false);
 
   const handleSizeInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setPizza(prevState => {
+    setConstructor(prevState => {
       return {
         ...prevState,
         size: evt.target.value,
@@ -47,7 +50,7 @@ const Configurator: FC<ConfiguratorProps> = () => {
   };
 
   const handleDoughInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setPizza(prevState => {
+    setConstructor(prevState => {
       return {
         ...prevState,
         dough: evt.target.value,
@@ -56,7 +59,7 @@ const Configurator: FC<ConfiguratorProps> = () => {
   };
 
   const handleSouseInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setPizza(prevState => {
+    setConstructor(prevState => {
       return {
         ...prevState,
         souse: evt.target.value,
@@ -66,17 +69,17 @@ const Configurator: FC<ConfiguratorProps> = () => {
 
   const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
-    const isFillingExist = pizza.fillings.find((filling) => value === filling);
+    const isFillingExist = constructor.fillings.find((filling) => value === filling);
 
     if (!isFillingExist) {
-      setPizza(prevState => {
+      setConstructor(prevState => {
         return {
           ...prevState,
           fillings: [...prevState.fillings, value],
         };
       });
     } else {
-      setPizza(prevState => {
+      setConstructor(prevState => {
         const filteredArray = prevState.fillings.filter((item) => item !== value);
 
         return {
@@ -94,19 +97,20 @@ const Configurator: FC<ConfiguratorProps> = () => {
   };
 
   React.useEffect(() => {
-    const fillingsAmount = pizza.fillings.length;
-    const isBigPizza = pizza.size === "35";
+    const fillingsAmount = constructor.fillings.length;
+    const isBigPizza = constructor.size === "35";
 
     if (isBigPizza) {
       setPrice(() => {
-        return 250 + fillingsAmount * 29;
+        return BIG_PIZZA_PRICE + fillingsAmount * FILLING_PRICE;
       });
     } else {
       setPrice(() => {
-        return 200 + fillingsAmount * 29;
+        return DEFAULT_PIZZA_PRICE + fillingsAmount * FILLING_PRICE
+          ;
       });
     }
-  }, [pizza]);
+  }, [constructor]);
 
   return (
     <div>
@@ -123,13 +127,26 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="30">30 см</label>
 
-                <input onChange={handleSizeInputChange} type="radio" id="30" name='size' value='30' defaultChecked/>
+                <input
+                  onChange={handleSizeInputChange}
+                  type="radio"
+                  id="30"
+                  name='size'
+                  value='30'
+                  defaultChecked
+                />
               </li>
 
               <li>
                 <label htmlFor="35">35 см</label>
 
-                <input onChange={handleSizeInputChange} type="radio" id="35" name='size' value='35'/>
+                <input
+                  onChange={handleSizeInputChange}
+                  type="radio"
+                  id="35"
+                  name='size'
+                  value='35'
+                />
               </li>
             </ul>
           </fieldset>
@@ -145,7 +162,6 @@ const Configurator: FC<ConfiguratorProps> = () => {
                   onChange={handleDoughInputChange}
                   type="radio"
                   id="thin"
-
                   name='dough'
                   value='thin'
                   defaultChecked
@@ -155,7 +171,13 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="lush">Пышное</label>
 
-                <input onChange={handleDoughInputChange} type="radio" id="lush" name='dough' value='lush'/>
+                <input
+                  onChange={handleDoughInputChange}
+                  type="radio"
+                  id="lush"
+                  name='dough'
+                  value='lush'
+                />
               </li>
             </ul>
           </fieldset>
@@ -167,20 +189,39 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="ketchup">Томатный</label>
 
-                <input onChange={handleSouseInputChange} type="radio" id="ketchup" name='souse' value='ketchup'
-                       defaultChecked/>
+                <input
+                  onChange={handleSouseInputChange}
+                  type="radio"
+                  id="ketchup"
+                  name='souse'
+                  value='ketchup'
+                  defaultChecked
+                />
               </li>
 
               <li>
                 <label htmlFor="white">Белый</label>
 
-                <input onChange={handleSouseInputChange} type="radio" id="white" name='souse' value='white'/>
+                <input
+                  onChange={handleSouseInputChange}
+                  type="radio"
+                  id="white"
+                  name='souse'
+                  value='white'
+                />
               </li>
 
               <li>
                 <label htmlFor="acute">Острый</label>
 
-                <input onChange={handleSouseInputChange} type="radio" id="acute" name='souse' value='acute'/>
+                <input
+                  onChange={handleSouseInputChange}
+                  type="radio"
+                  id="acute"
+                  name='souse'
+                  value='acute'
+
+                />
               </li>
             </ul>
           </fieldset>
@@ -192,20 +233,38 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="mozzarella">Моцарелла</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="mozzarella" name='cheese'
-                       value='mozzarella'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="mozzarella"
+                  name='cheese'
+                  value='mozzarella'
+                />
               </li>
 
               <li>
                 <label htmlFor="cheddar">Чеддер</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="cheddar" name='cheese' value='cheddar'/>
+                <input
+                  onChange={handleCheckboxChange}
+
+                  type="checkbox"
+                  id="cheddar"
+                  name='cheese'
+                  value='cheddar'
+                />
               </li>
 
               <li>
                 <label htmlFor="blue">Дор Блю</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="blue" name='cheese' value='blue'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="blue"
+                  name='cheese'
+                  value='blue'
+                />
               </li>
             </ul>
           </fieldset>
@@ -217,20 +276,38 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="tomato">Помидор</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="tomato" name='vegetable' value='tomato'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="tomato"
+                  name='vegetable'
+                  value='tomato'
+                />
               </li>
 
               <li>
                 <label htmlFor="mushrooms">Грибы</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="mushrooms" name='vegetable'
-                       value='mushrooms'/>
+
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="mushrooms"
+                  name='vegetable'
+                  value='mushrooms'
+                />
               </li>
 
               <li>
                 <label htmlFor="paper">Перец</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="paper" name='vegetable' value='paper'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="paper"
+                  name='vegetable'
+                  value='paper'
+                />
               </li>
             </ul>
           </fieldset>
@@ -242,19 +319,37 @@ const Configurator: FC<ConfiguratorProps> = () => {
               <li>
                 <label htmlFor="bacon">Бекон</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="bacon" name='meat' value='bacon'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="bacon"
+                  name='meat'
+                  value='bacon'
+                />
               </li>
 
               <li>
                 <label htmlFor="pepperoni">Пепперони</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="pepperoni" name='meat' value='pepperoni'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="pepperoni"
+                  name='meat'
+                  value='pepperoni'
+                />
               </li>
 
               <li>
                 <label htmlFor="ham">Ветчина</label>
 
-                <input onChange={handleCheckboxChange} type="checkbox" id="ham" name='meat' value='ham'/>
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  id="ham"
+                  name='meat'
+                  value='ham'
+                />
               </li>
             </ul>
           </fieldset>
@@ -268,12 +363,12 @@ const Configurator: FC<ConfiguratorProps> = () => {
         isModalVisible && (
           <div className='modal'>
             <h2>Маргарита</h2>
-            <p>{pizza.size} см на {namingsByInputValues[pizza.dough]} тесте</p>
+            <p>{constructor.size} см на {namingsByInputValues[constructor.dough]} тесте</p>
 
             <p>
-              {namingsByInputValues[pizza.souse]} соус -
+              {namingsByInputValues[constructor.souse]} соус -
               {
-                pizza.fillings.map(filling => {
+                constructor.fillings.map(filling => {
                   return namingsByInputValues[filling];
                 }).join(", ")
               }
