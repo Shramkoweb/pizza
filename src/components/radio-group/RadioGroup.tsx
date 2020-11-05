@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 
+// TODO InputValue move to shared types
 export type InputValue = {
   id: string,
   value: string,

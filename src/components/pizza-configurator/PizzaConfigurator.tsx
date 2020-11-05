@@ -2,15 +2,22 @@ import React, { FC } from "react";
 
 import "./index.css";
 
-// TODO InputValue move to shared types
-import RadioGroup, { InputValue } from "../radio-group/RadioGroup";
+import RadioGroup from "../radio-group/RadioGroup";
 import CheckboxGroup from "../checkbox-group/CheckboxGroup";
+import OrderModal from "../order-modal/OrderModal";
 import {
   BIG_PIZZA_PRICE,
   DEFAULT_PIZZA_PRICE,
   FILLING_PRICE,
 } from "../../constants";
-import OrderModal from "../order-modal/OrderModal";
+import {
+  cheeses,
+  dough,
+  meat,
+  sauces,
+  sizes,
+  vegetables,
+} from "../../mocks";
 
 const DEFAULT_PIZZA = {
   size: "30",
@@ -26,10 +33,25 @@ type Pizza = {
   fillings: string[],
 }
 
+const getPizzaPrice = (
+  fillingsCount: number,
+  isBigPizza: boolean,
+  fillingPrice: number,
+  defaultPrices: { small: number, big: number },
+): number => {
+  const fillingsTotalPrice = fillingsCount * fillingPrice;
+
+  if (isBigPizza) {
+    return defaultPrices.big + fillingsTotalPrice;
+  }
+
+  return defaultPrices.small + fillingsTotalPrice;
+};
+
 const PizzaConfigurator: FC = () => {
   const [price, setPrice] = React.useState(DEFAULT_PIZZA_PRICE);
   const [constructor, setConstructor] = React.useState<Pizza>(DEFAULT_PIZZA);
-  const [isModalVisible, setModalVisible] = React.useState(false);
+  const [isModalVisible, showModal] = React.useState(false);
 
   // TODO THINK move handler to RadioGroup?
   const handleRadioInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,9 +65,9 @@ const PizzaConfigurator: FC = () => {
 
   const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
-    const isFillingExisting = constructor.fillings.find((filling) => value === filling);
+    const fillingExists = constructor.fillings.find((filling) => value === filling);
 
-    if (!isFillingExisting) {
+    if (!fillingExists) {
       setConstructor(prevState => {
         return {
           ...prevState,
@@ -67,22 +89,7 @@ const PizzaConfigurator: FC = () => {
   const handleFormSubmit = (evt: any) => {
     evt.preventDefault();
 
-    setModalVisible(true);
-  };
-
-  const getPizzaPrice = (
-    fillingsCount: number,
-    isBigPizza: boolean,
-    fillingPrice: number,
-    defaultPrices: { small: number, big: number },
-  ): number => {
-    const fillingsTotalPrice = fillingsCount * fillingPrice;
-
-    if (isBigPizza) {
-      return defaultPrices.big + fillingsTotalPrice;
-    }
-
-    return defaultPrices.small + fillingsTotalPrice;
+    showModal(true);
   };
 
   React.useEffect(() => {
@@ -96,103 +103,6 @@ const PizzaConfigurator: FC = () => {
 
     setPrice(pizzaPrice);
   }, [constructor]);
-
-  // TODO remove on get data from server
-  const sizes: InputValue[] = [
-    {
-      id: "0",
-      value: "30",
-      label: "30 см",
-      isChecked: true,
-    },
-    {
-      id: "1",
-      value: "35",
-      label: "35 см",
-    },
-  ];
-  const dough: InputValue[] = [
-    {
-      id: "2",
-      value: "thin",
-      label: "Тонкое",
-      isChecked: true,
-    },
-    {
-      id: "3",
-      value: "lush",
-      label: "Пышное",
-    },
-  ];
-  const sauces: InputValue[] = [
-    {
-      id: "4",
-      value: "ketchup",
-      label: "Томатный",
-      isChecked: true,
-    },
-    {
-      id: "5",
-      value: "white",
-      label: "Белый",
-    },
-    {
-      id: "6",
-      value: "acute",
-      label: "Острый",
-    },
-  ];
-  const cheeses: InputValue[] = [
-    {
-      id: "7",
-      value: "mozzarella",
-      label: "Моцарелла",
-    },
-    {
-      id: "8",
-      value: "cheddar",
-      label: "Чеддер",
-    },
-    {
-      id: "9",
-      value: "blue",
-      label: "Дор Блю",
-    },
-  ];
-  const vegetables: InputValue[] = [
-    {
-      id: "10",
-      value: "tomato",
-      label: "Помидор",
-    },
-    {
-      id: "11",
-      value: "mushrooms",
-      label: "Грибы",
-    },
-    {
-      id: "12",
-      value: "paper",
-      label: "Перец",
-    },
-  ];
-  const meat: InputValue[] = [
-    {
-      id: "13",
-      value: "bacon",
-      label: "Бекон",
-    },
-    {
-      id: "14",
-      value: "pepperoni",
-      label: "Пепперони",
-    },
-    {
-      id: "15",
-      value: "ham",
-      label: "Ветчина",
-    },
-  ];
 
   return (
     <div>
