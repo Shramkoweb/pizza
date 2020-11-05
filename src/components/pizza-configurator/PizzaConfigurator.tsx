@@ -18,6 +18,7 @@ import {
   sizes,
   vegetables,
 } from "../../mocks";
+import { getPizzaPrice } from "../../utils";
 
 const DEFAULT_PIZZA = {
   size: "30",
@@ -32,21 +33,6 @@ type Pizza = {
   sauce: string,
   fillings: string[],
 }
-
-const getPizzaPrice = (
-  fillingsCount: number,
-  isBigPizza: boolean,
-  fillingPrice: number,
-  defaultPrices: { small: number, big: number },
-): number => {
-  const fillingsTotalPrice = fillingsCount * fillingPrice;
-
-  if (isBigPizza) {
-    return defaultPrices.big + fillingsTotalPrice;
-  }
-
-  return defaultPrices.small + fillingsTotalPrice;
-};
 
 const PizzaConfigurator: FC = () => {
   const [price, setPrice] = React.useState(DEFAULT_PIZZA_PRICE);
