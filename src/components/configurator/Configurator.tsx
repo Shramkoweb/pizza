@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 
 import "./index.css";
+import RadioGroup, { InputValue } from "../radio-group/RadioGroup";
+import CheckboxGroup from "../checkbox-group/CheckboxGroup";
 
 const DEFAULT_PIZZA_PRICE = 200;
 const BIG_PIZZA_PRICE = 250;
@@ -41,6 +43,7 @@ const Configurator: FC = () => {
   const [constructor, setConstructor] = React.useState<Pizza>(DEFAULT_PIZZA);
   const [isModalVisible, setModalVisible] = React.useState(false);
 
+  // TODO THINK move handler to RadioGroup?
   const handleRadioInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setConstructor(prevState => {
       return {
@@ -95,6 +98,107 @@ const Configurator: FC = () => {
     }
   }, [constructor]);
 
+  const sizes: InputValue[] = [
+    {
+      id: "0",
+      value: "30",
+      label: "30 см",
+      isChecked: true,
+    },
+    {
+      id: "1",
+      value: "35",
+      label: "35 см",
+    },
+  ];
+
+  const dough: InputValue[] = [
+    {
+      id: "2",
+      value: "thin",
+      label: "Тонкое",
+      isChecked: true,
+    },
+    {
+      id: "3",
+      value: "lush",
+      label: "Пышное",
+    },
+  ];
+
+  const sauces: InputValue[] = [
+    {
+      id: "4",
+      value: "ketchup",
+      label: "Томатный",
+      isChecked: true,
+    },
+    {
+      id: "5",
+      value: "white",
+      label: "Белый",
+    },
+    {
+      id: "6",
+      value: "acute",
+      label: "Острый",
+    },
+  ];
+
+  const cheeses: InputValue[] = [
+    {
+      id: "7",
+      value: "mozzarella",
+      label: "Моцарелла",
+    },
+    {
+      id: "8",
+      value: "cheddar",
+      label: "Чеддер",
+    },
+    {
+      id: "9",
+      value: "blue",
+      label: "Дор Блю",
+    },
+  ];
+
+  const vegetables: InputValue[] = [
+    {
+      id: "10",
+      value: "tomato",
+      label: "Помидор",
+    },
+    {
+      id: "11",
+      value: "mushrooms",
+      label: "Грибы",
+    },
+    {
+      id: "12",
+      value: "paper",
+      label: "Перец",
+    },
+  ];
+
+  const meat: InputValue[] = [
+    {
+      id: "13",
+      value: "bacon",
+      label: "Бекон",
+    },
+    {
+      id: "14",
+      value: "pepperoni",
+      label: "Пепперони",
+    },
+    {
+      id: "15",
+      value: "ham",
+      label: "Ветчина",
+    },
+  ];
+
   return (
     <div>
       <form
@@ -103,239 +207,47 @@ const Configurator: FC = () => {
         method="POST"
       >
         <div>
-          <fieldset>
-            <legend>Размер</legend>
+          <RadioGroup
+            legend="Размер"
+            onInputChange={handleRadioInputChange}
+            groupName="size"
+            values={sizes}
+          />
 
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="30">30 см</label>
+          <RadioGroup
+            legend="Тесто"
+            onInputChange={handleRadioInputChange}
+            groupName="dough"
+            values={dough}
+          />
 
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="30"
-                  name='size'
-                  value='30'
-                  defaultChecked
-                />
-              </li>
+          <RadioGroup
+            legend="Выберите соус"
+            onInputChange={handleRadioInputChange}
+            groupName="sauce"
+            values={sauces}
+          />
 
-              <li>
-                <label htmlFor="35">35 см</label>
+          <CheckboxGroup
+            legend={"Добавьте сыр"}
+            onInputChange={handleCheckboxChange}
+            groupName='cheese'
+            values={cheeses}
+          />
 
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="35"
-                  name='size'
-                  value='35'
-                />
-              </li>
-            </ul>
-          </fieldset>
+          <CheckboxGroup
+            legend={"Добавьте овощи"}
+            onInputChange={handleCheckboxChange}
+            groupName='vegetables'
+            values={vegetables}
+          />
 
-          <fieldset>
-            <legend>Тесто</legend>
-
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="thin">Тонкое</label>
-
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="thin"
-                  name='dough'
-                  value='thin'
-                  defaultChecked
-                />
-              </li>
-
-              <li>
-                <label htmlFor="lush">Пышное</label>
-
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="lush"
-                  name='dough'
-                  value='lush'
-                />
-              </li>
-            </ul>
-          </fieldset>
-
-          <fieldset>
-            <legend>Выберите соус</legend>
-
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="ketchup">Томатный</label>
-
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="ketchup"
-                  name='sauce'
-                  value='ketchup'
-                  defaultChecked
-                />
-              </li>
-
-              <li>
-                <label htmlFor="white">Белый</label>
-
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="white"
-                  name='sauce'
-                  value='white'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="acute">Острый</label>
-
-                <input
-                  onChange={handleRadioInputChange}
-                  type="radio"
-                  id="acute"
-                  name='sauce'
-                  value='acute'
-
-                />
-              </li>
-            </ul>
-          </fieldset>
-
-          <fieldset>
-            <legend>Добавьте сыр</legend>
-
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="mozzarella">Моцарелла</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="mozzarella"
-                  name='cheese'
-                  value='mozzarella'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="cheddar">Чеддер</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-
-                  type="checkbox"
-                  id="cheddar"
-                  name='cheese'
-                  value='cheddar'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="blue">Дор Блю</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="blue"
-                  name='cheese'
-                  value='blue'
-                />
-              </li>
-            </ul>
-          </fieldset>
-
-          <fieldset>
-            <legend>Добавьте овощи</legend>
-
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="tomato">Помидор</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="tomato"
-                  name='vegetable'
-                  value='tomato'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="mushrooms">Грибы</label>
-
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="mushrooms"
-                  name='vegetable'
-                  value='mushrooms'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="paper">Перец</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="paper"
-                  name='vegetable'
-                  value='paper'
-                />
-              </li>
-            </ul>
-          </fieldset>
-
-          <fieldset>
-            <legend>Добавьте мясо</legend>
-
-            <ul style={{ listStyle: "none" }}>
-              <li>
-                <label htmlFor="bacon">Бекон</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="bacon"
-                  name='meat'
-                  value='bacon'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="pepperoni">Пепперони</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="pepperoni"
-                  name='meat'
-                  value='pepperoni'
-                />
-              </li>
-
-              <li>
-                <label htmlFor="ham">Ветчина</label>
-
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="ham"
-                  name='meat'
-                  value='ham'
-                />
-              </li>
-            </ul>
-          </fieldset>
+          <CheckboxGroup
+            legend={"Добавьте мясо"}
+            onInputChange={handleCheckboxChange}
+            groupName='meat'
+            values={meat}
+          />
 
           <button type="submit">Заказать за {price} руб</button>
         </div>
