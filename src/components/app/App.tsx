@@ -1,6 +1,6 @@
 import React from "react";
 
-import Configurator from "../configurator/Configurator";
+import PizzaConfigurator from "../pizza-configurator/PizzaConfigurator";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <p>30 см на толстом тесте</p>
       <p>Томатный соус • Моцарелла • Томаты</p>
 
-      <Configurator/>
+      <PizzaConfigurator/>
     </div>
   );
 }

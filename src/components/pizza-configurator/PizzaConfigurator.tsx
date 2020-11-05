@@ -5,10 +5,13 @@ import "./index.css";
 // TODO InputValue move to shared types
 import RadioGroup, { InputValue } from "../radio-group/RadioGroup";
 import CheckboxGroup from "../checkbox-group/CheckboxGroup";
+import {
+  BIG_PIZZA_PRICE,
+  DEFAULT_PIZZA_PRICE,
+  FILLING_PRICE,
+} from "../../constants";
+import OrderModal from "../order-modal/OrderModal";
 
-const DEFAULT_PIZZA_PRICE = 200;
-const BIG_PIZZA_PRICE = 250;
-const FILLING_PRICE = 29;
 const DEFAULT_PIZZA = {
   size: "30",
   dough: "thin",
@@ -23,24 +26,7 @@ type Pizza = {
   fillings: string[],
 }
 
-const namingsByInputValues: { [index: string]: string } = {
-  thin: "Тонком",
-  lush: "Толстом",
-  ketchup: "Томатный",
-  white: "Белый",
-  acute: "Острый",
-  mozzarella: "Моцарелла",
-  cheddar: "Чеддер",
-  blue: "Дор Блю",
-  tomato: "Помидор",
-  mushrooms: "Грибы",
-  paper: "Перец",
-  bacon: "Бекон",
-  pepperoni: "Пепперони",
-  ham: "Ветчина",
-};
-
-const Configurator: FC = () => {
+const PizzaConfigurator: FC = () => {
   const [price, setPrice] = React.useState(DEFAULT_PIZZA_PRICE);
   const [constructor, setConstructor] = React.useState<Pizza>(DEFAULT_PIZZA);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -87,9 +73,10 @@ const Configurator: FC = () => {
   const getPizzaPrice = (
     fillingsCount: number,
     isBigPizza: boolean,
+    fillingPrice: number,
     defaultPrices: { small: number, big: number },
   ): number => {
-    const fillingsTotalPrice = fillingsCount * FILLING_PRICE;
+    const fillingsTotalPrice = fillingsCount * fillingPrice;
 
     if (isBigPizza) {
       return defaultPrices.big + fillingsTotalPrice;
@@ -102,7 +89,7 @@ const Configurator: FC = () => {
     const fillingsAmount = constructor.fillings.length;
     const isBigPizza = constructor.size === "35";
 
-    const pizzaPrice = getPizzaPrice(fillingsAmount, isBigPizza, {
+    const pizzaPrice = getPizzaPrice(fillingsAmount, isBigPizza, FILLING_PRICE, {
       big: BIG_PIZZA_PRICE,
       small: DEFAULT_PIZZA_PRICE,
     });
@@ -263,24 +250,16 @@ const Configurator: FC = () => {
 
 
       {
-        isModalVisible && (
-          <div className='modal'>
-            <h2>Маргарита</h2>
-            <p>{constructor.size} см на {namingsByInputValues[constructor.dough]} тесте</p>
-
-            <p>
-              {namingsByInputValues[constructor.sauce]} соус -
-              {
-                constructor.fillings.map(filling => {
-                  return namingsByInputValues[filling];
-                }).join(", ")
-              }
-            </p>
-          </div>
-        )
+        isModalVisible &&
+        <OrderModal
+          dough={constructor.dough}
+          fillings={constructor.fillings}
+          sauce={constructor.sauce}
+          size={constructor.size}
+        />
       }
     </div>
   );
 };
 
-export default Configurator;
+export default PizzaConfigurator;
