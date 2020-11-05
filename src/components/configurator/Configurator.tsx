@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 
 import "./index.css";
+
+// TODO InputValue move to shared types
 import RadioGroup, { InputValue } from "../radio-group/RadioGroup";
 import CheckboxGroup from "../checkbox-group/CheckboxGroup";
 
@@ -82,22 +84,33 @@ const Configurator: FC = () => {
     setModalVisible(true);
   };
 
+  const getPizzaPrice = (
+    fillingsCount: number,
+    isBigPizza: boolean,
+    defaultPrices: { small: number, big: number },
+  ): number => {
+    const fillingsTotalPrice = fillingsCount * FILLING_PRICE;
+
+    if (isBigPizza) {
+      return defaultPrices.big + fillingsTotalPrice;
+    }
+
+    return defaultPrices.small + fillingsTotalPrice;
+  };
+
   React.useEffect(() => {
     const fillingsAmount = constructor.fillings.length;
     const isBigPizza = constructor.size === "35";
 
-    if (isBigPizza) {
-      setPrice(() => {
-        return BIG_PIZZA_PRICE + fillingsAmount * FILLING_PRICE;
-      });
-    } else {
-      setPrice(() => {
-        return DEFAULT_PIZZA_PRICE + fillingsAmount * FILLING_PRICE
-          ;
-      });
-    }
+    const pizzaPrice = getPizzaPrice(fillingsAmount, isBigPizza, {
+      big: BIG_PIZZA_PRICE,
+      small: DEFAULT_PIZZA_PRICE,
+    });
+
+    setPrice(pizzaPrice);
   }, [constructor]);
 
+  // TODO remove on get data from server
   const sizes: InputValue[] = [
     {
       id: "0",
@@ -111,7 +124,6 @@ const Configurator: FC = () => {
       label: "35 см",
     },
   ];
-
   const dough: InputValue[] = [
     {
       id: "2",
@@ -125,7 +137,6 @@ const Configurator: FC = () => {
       label: "Пышное",
     },
   ];
-
   const sauces: InputValue[] = [
     {
       id: "4",
@@ -144,7 +155,6 @@ const Configurator: FC = () => {
       label: "Острый",
     },
   ];
-
   const cheeses: InputValue[] = [
     {
       id: "7",
@@ -162,7 +172,6 @@ const Configurator: FC = () => {
       label: "Дор Блю",
     },
   ];
-
   const vegetables: InputValue[] = [
     {
       id: "10",
@@ -180,7 +189,6 @@ const Configurator: FC = () => {
       label: "Перец",
     },
   ];
-
   const meat: InputValue[] = [
     {
       id: "13",
