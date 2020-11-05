@@ -2,14 +2,20 @@ import React, { FC } from "react";
 
 import "./index.css";
 
-const DEFAULT_PIZZA_PRICE: number = 200;
-const BIG_PIZZA_PRICE: number = 250;
-const FILLING_PRICE: number = 29;
+const DEFAULT_PIZZA_PRICE = 200;
+const BIG_PIZZA_PRICE = 250;
+const FILLING_PRICE = 29;
+const DEFAULT_PIZZA = {
+  size: "30",
+  dough: "thin",
+  sauce: "ketchup",
+  fillings: [],
+};
 
-type PizzaConstructor = {
+type Pizza = {
   size: string,
   dough: string,
-  souse: string,
+  sauce: string,
   fillings: string[],
 }
 
@@ -32,12 +38,7 @@ const namingsByInputValues: { [index: string]: string } = {
 
 const Configurator: FC = () => {
   const [price, setPrice] = React.useState(DEFAULT_PIZZA_PRICE);
-  const [constructor, setConstructor] = React.useState<PizzaConstructor>({
-    size: "30",
-    dough: "thin",
-    souse: "ketchup",
-    fillings: [],
-  });
+  const [constructor, setConstructor] = React.useState<Pizza>(DEFAULT_PIZZA);
   const [isModalVisible, setModalVisible] = React.useState(false);
 
   const handleRadioInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,9 +52,9 @@ const Configurator: FC = () => {
 
   const handleCheckboxChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
-    const isFillingExist = constructor.fillings.find((filling) => value === filling);
+    const isFillingExisting = constructor.fillings.find((filling) => value === filling);
 
-    if (!isFillingExist) {
+    if (!isFillingExisting) {
       setConstructor(prevState => {
         return {
           ...prevState,
@@ -175,7 +176,7 @@ const Configurator: FC = () => {
                   onChange={handleRadioInputChange}
                   type="radio"
                   id="ketchup"
-                  name='souse'
+                  name='sauce'
                   value='ketchup'
                   defaultChecked
                 />
@@ -188,7 +189,7 @@ const Configurator: FC = () => {
                   onChange={handleRadioInputChange}
                   type="radio"
                   id="white"
-                  name='souse'
+                  name='sauce'
                   value='white'
                 />
               </li>
@@ -200,7 +201,7 @@ const Configurator: FC = () => {
                   onChange={handleRadioInputChange}
                   type="radio"
                   id="acute"
-                  name='souse'
+                  name='sauce'
                   value='acute'
 
                 />
@@ -348,7 +349,7 @@ const Configurator: FC = () => {
             <p>{constructor.size} см на {namingsByInputValues[constructor.dough]} тесте</p>
 
             <p>
-              {namingsByInputValues[constructor.souse]} соус -
+              {namingsByInputValues[constructor.sauce]} соус -
               {
                 constructor.fillings.map(filling => {
                   return namingsByInputValues[filling];
