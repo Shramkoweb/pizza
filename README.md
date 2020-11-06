@@ -1,4 +1,6 @@
 # Pizza (Work in progress)
+![CI](https://github.com/Shramkoweb/pizza/workflows/CI/badge.svg)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3a41e785-ecb5-44c1-b636-7e54ab178eef/deploy-status)](https://app.netlify.com/sites/distracted-fermi-c7c64b/deploys)
 
 "Pizza" is a react app for buying pizza.
 Mobile first design.
