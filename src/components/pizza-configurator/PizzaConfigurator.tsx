@@ -72,7 +72,7 @@ const PizzaConfigurator: FC = () => {
     }
   };
 
-  const handleFormSubmit = (evt: any) => {
+  const handleFormSubmit = (evt: React.ChangeEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     showModal(true);
