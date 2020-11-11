@@ -18,9 +18,9 @@ import {
   sizes,
   vegetables,
 } from "../../mocks";
-import { getPizzaPrice } from "../../utils";
+import { getPizzaPrice, IngridientName } from "../../utils";
 
-const DEFAULT_PIZZA = {
+const DEFAULT_PIZZA:Pizza = {
   size: "30",
   dough: "thin",
   sauce: "ketchup",
@@ -29,9 +29,9 @@ const DEFAULT_PIZZA = {
 
 type Pizza = {
   size: string,
-  dough: string,
-  sauce: string,
-  fillings: string[],
+  dough: IngridientName,
+  sauce: IngridientName,
+  fillings: IngridientName[],
 }
 
 const PizzaConfigurator: FC = () => {
@@ -57,7 +57,7 @@ const PizzaConfigurator: FC = () => {
       setConstructor(prevState => {
         return {
           ...prevState,
-          fillings: [...prevState.fillings, value],
+          fillings: [...prevState.fillings, value as IngridientName],
         };
       });
     } else {
@@ -120,21 +120,21 @@ const PizzaConfigurator: FC = () => {
           />
 
           <CheckboxGroup
-            legend={"Добавьте сыр"}
+            legend="Добавьте сыр"
             onInputChange={handleCheckboxChange}
             groupName='cheese'
             values={cheeses}
           />
 
           <CheckboxGroup
-            legend={"Добавьте овощи"}
+            legend="Добавьте овощи"
             onInputChange={handleCheckboxChange}
             groupName='vegetables'
             values={vegetables}
           />
 
           <CheckboxGroup
-            legend={"Добавьте мясо"}
+            legend="Добавьте мясо"
             onInputChange={handleCheckboxChange}
             groupName='meat'
             values={meat}

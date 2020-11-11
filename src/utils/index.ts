@@ -1,6 +1,8 @@
 import { ingredientsNames } from "../constants";
 
-export const getIngredientName = (ingredient: keyof typeof ingredientsNames) => {
+export type IngridientName = keyof typeof ingredientsNames;
+
+export const getIngredientName = (ingredient: IngridientName) => {
   return ingredientsNames[ingredient];
 };
 
